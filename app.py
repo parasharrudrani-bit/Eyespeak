@@ -1,4 +1,5 @@
 from flask import Flask, render_template, Response
+from flask import request, jsonify
 import cv2
 import mediapipe as mp
 import numpy as np
@@ -145,6 +146,16 @@ def generate_frames():
                b'Content-Type: image/jpeg\r\n\r\n'+frame+b'\r\n')
 
 # ================= ROUTES =================
+# ===== BUTTON SPEAK ROUTE =====
+@app.route('/speak', methods=['POST'])
+def speak_from_button():
+    data = request.get_json()
+    text = data.get("text","")
+
+    if text != "":
+        speak_text(text)
+
+    return jsonify({"status":"ok"})
 @app.route('/')
 def index():
     return render_template('index.html')
